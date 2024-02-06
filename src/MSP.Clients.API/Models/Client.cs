@@ -16,4 +16,11 @@ public class Client : Entity
         DocumentNumber = documentNumber;
         Email = email;
     }
+
+    public void UpdateClient(string name, string documentNumber, string email)
+    {
+        Name = name;
+        DocumentNumber = documentNumber;
+        Email = email;
+    }
 }

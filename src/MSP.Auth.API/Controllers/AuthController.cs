@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MSP.Auth.API.Application.Services;
-using MSP.Auth.API.ViewModels;
+using MSP.Auth.API.DTOs;
 using MSP.WebAPI.Controller;
 using MSP.WebAPI.Models;
 using MSP.WebAPI.Services;

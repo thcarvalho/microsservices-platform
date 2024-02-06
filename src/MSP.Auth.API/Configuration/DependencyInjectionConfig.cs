@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MSP.Auth.API.Application.Settings;
-using MSP.Auth.API.AutoMapper;
 using MSP.Auth.API.Data;
 using MSP.Auth.API.Validations;
 using MSP.Core.Extensions;
@@ -67,8 +66,6 @@ public static class DependencyInjection
         services.AddControllers();
 
         services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
-
-        services.AddAutoMapper(typeof(AuthProfile));
 
         services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 

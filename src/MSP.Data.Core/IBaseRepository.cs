@@ -13,6 +13,10 @@ public interface IBaseRepository<TEntity> : IReadOnlyRepository<TEntity> where T
     IEnumerable<TEntity> UpdateRange(IEnumerable<TEntity> entities);
     TEntity DeleteOne(TEntity entity);
     Task<TEntity> DeleteByIdAsync(int id);
-    IEnumerable<TEntity> DeleteMany(IEnumerable<TEntity> entities);
+    IEnumerable<TEntity> DeleteRange(IEnumerable<TEntity> entities);
     Task<IEnumerable<TEntity>> DeleteByFilterAsync(Expression<Func<TEntity, bool>> filter);
+    TEntity DisableOne(TEntity entity);
+    Task<TEntity> DisableByIdAsync(int id);
+    IEnumerable<TEntity> DisableRange(IEnumerable<TEntity> entities);
+    Task<IEnumerable<TEntity>> DisableByFilterAsync(Expression<Func<TEntity, bool>> filter);
 }

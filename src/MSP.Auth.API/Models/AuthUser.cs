@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using MSP.Auth.API.Utils;
+﻿using MSP.Auth.API.Utils;
 using MSP.Core.Models;
 
 namespace MSP.Auth.API.Models;
@@ -16,20 +15,15 @@ public class AuthUser : Entity
 
     public AuthUser(
         string name, 
-        string email, 
-        string passwordHash, 
-        int authUserRoleId)
+        string email)
     {
         Name = name;
         Email = email;
-        PasswordHash = passwordHash;
-        AuthUserRoleId = authUserRoleId;
     }
 
-
-    public void CreateRegister(string password)
+    public void CreateGuestRegister(string password)
     {
-        AuthUserRoleId = AuthUserRole.Guest.Id;
         PasswordHash = PasswordHasher.Hash(password);
+        AuthUserRoleId = AuthUserRole.Guest.Id;
     }
 }

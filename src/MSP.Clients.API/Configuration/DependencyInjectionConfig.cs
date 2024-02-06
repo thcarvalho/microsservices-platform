@@ -3,12 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MSP.Auth.API;
-using MSP.Clients.API.AutoMapper;
 using MSP.Clients.API.Data;
 using MSP.Clients.API.Integration;
 using MSP.Clients.API.Validations;
 using MSP.Core.Extensions;
-using MSP.Core.Integration;
 using MSP.MessageBus;
 using Scrutor;
 
@@ -68,9 +66,7 @@ public static class DependencyInjection
 
         services.AddControllers();
 
-        services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ClientRegisteredValidator>());
-
-        services.AddAutoMapper(typeof(ClientsProfile));
+        services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ClientRequestValidator>());
 
         services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 

@@ -1,6 +1,6 @@
-﻿namespace MSP.Auth.API.ViewModels;
+﻿namespace MSP.Auth.API.DTOs;
 
-public class RegisterResponseDTO
+public record RegisterResponseDTO
 {
     public int Id { get; set; }
     public string Name { get; set; }

@@ -40,7 +40,7 @@ public class ReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity> where TE
         return await GetQueryable(@params, includeProps, asNoTracking).ToListAsync();
     }
 
-    public async Task<TEntity> GetFirstAsync(
+    public async Task<TEntity> GetOneAsync(
         Expression<Func<TEntity, bool>> filter = null, 
         string includeProps = null,
         bool asNoTracking = true)
@@ -63,6 +63,11 @@ public class ReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity> where TE
     public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filter = null)
     {
         return await GetQueryable(filter).AnyAsync();
+    }
+
+    public async Task<bool> ExistsByIdAsync(int id)
+    {
+        return await GetQueryable(x => x.Id == id).AnyAsync();
     }
 
     public async Task<int> CountAsync(Expression<Func<TEntity, bool>> filter = null)

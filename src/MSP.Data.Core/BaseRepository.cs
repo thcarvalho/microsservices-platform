@@ -48,8 +48,6 @@ public class BaseRepository<TEntity> : ReadOnlyRepository<TEntity>, IBaseReposit
 
     public TEntity DeleteOne(TEntity entity)
     {
-        //entity.SetActive(false);
-        //return Update(entity);
         _dbSet.Remove(entity);
         return entity;
     }
@@ -60,7 +58,7 @@ public class BaseRepository<TEntity> : ReadOnlyRepository<TEntity>, IBaseReposit
         return DeleteOne(entity);
     }
 
-    public IEnumerable<TEntity> DeleteMany(IEnumerable<TEntity> entities)
+    public IEnumerable<TEntity> DeleteRange(IEnumerable<TEntity> entities)
     {
         foreach (var entity in entities)
             entity.SetActive(false);
@@ -68,6 +66,33 @@ public class BaseRepository<TEntity> : ReadOnlyRepository<TEntity>, IBaseReposit
     }
 
     public async Task<IEnumerable<TEntity>> DeleteByFilterAsync(Expression<Func<TEntity, bool>> filter)
+    {
+        var entities = await GetAsync(filter);
+        foreach (var entity in entities)
+            entity.SetActive(false);
+        return UpdateRange(entities);
+    }
+
+    public TEntity DisableOne(TEntity entity)
+    {
+        entity.SetActive(false);
+        return Update(entity);
+    }
+
+    public async Task<TEntity> DisableByIdAsync(int id)
+    {
+        var entity = await GetByIdAsync(id);
+        return DisableOne(entity);
+    }
+
+    public IEnumerable<TEntity> DisableRange(IEnumerable<TEntity> entities)
+    {
+        foreach (var entity in entities)
+            entity.SetActive(false);
+        return UpdateRange(entities);
+    }
+
+    public async Task<IEnumerable<TEntity>> DisableByFilterAsync(Expression<Func<TEntity, bool>> filter)
     {
         var entities = await GetAsync(filter);
         foreach (var entity in entities)

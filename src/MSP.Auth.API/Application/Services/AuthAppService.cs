@@ -1,17 +1,14 @@
 ﻿using System.Security.Claims;
-using AutoMapper;
-using Azure;
 using FluentValidation;
 using MSP.Auth.API.Data;
 using MSP.Auth.API.Data.Repositories;
+using MSP.Auth.API.DTOs;
+using MSP.Auth.API.Mapper;
 using MSP.Auth.API.Models;
 using MSP.Auth.API.Utils;
-using MSP.Auth.API.ViewModels;
 using MSP.Core.Integration;
 using MSP.Core.Models;
-using MSP.Data.Core;
 using MSP.MessageBus;
-using MSP.WebAPI.Models;
 using MSP.WebAPI.Services;
 
 namespace MSP.Auth.API.Application.Services;
@@ -20,7 +17,6 @@ public class AuthAppService : BaseAppService, IAuthAppService
 {
     private readonly IAuthUserRepository _authUserRepository;
     private readonly IMessageBus _bus;
-    private readonly IMapper _mapper;
     private readonly IAuthUnitOfWork _unitOfWork;
     private readonly IValidator<LoginRequestDTO> _loginValidator;
     private readonly IValidator<RegisterRequestDTO> _registerValidator;
@@ -31,7 +27,6 @@ public class AuthAppService : BaseAppService, IAuthAppService
         IHttpContextAccessor httpContextAccessor,
         IAuthUserRepository authUserRepository,
         IMessageBus bus,
-        IMapper mapper,
         IAuthUnitOfWork unitOfWork,
         IValidator<LoginRequestDTO> loginValidator,
         IValidator<RegisterRequestDTO> registerValidator,
@@ -39,7 +34,6 @@ public class AuthAppService : BaseAppService, IAuthAppService
     {
         _authUserRepository = authUserRepository;
         _bus = bus;
-        _mapper = mapper;
         _unitOfWork = unitOfWork;
         _loginValidator = loginValidator;
         _registerValidator = registerValidator;
@@ -48,20 +42,11 @@ public class AuthAppService : BaseAppService, IAuthAppService
 
     public async Task<LoginResponseDTO> LoginAsync(LoginRequestDTO request)
     {
-        var validation = await _loginValidator.ValidateAsync(request);
-        if (!validation.IsValid)
-        {
-            _notificationsCollector.AddNotifications(validation);
+        if (!await IsValidLoginDTOAsync(request) ||
+            !await IsLoginValidAsync(request.Email, request.Password))
             return default;
-        }
 
-        var user = await _authUserRepository.GetFirstAsync(x => x.Email == request.Email, "Role");
-        if (!PasswordHasher.Verify(request.Password, user.PasswordHash))
-        {
-            _notificationsCollector.AddNotification(new ErrorResponse(nameof(LoginRequestDTO), "User or password not found."));
-            return default;
-        }
-
+        var user = await _authUserRepository.GetOneAsync(x => x.Email == request.Email, "Role");
         var claims = new List<Claim>
         {
             new ("id", user.Id.ToString()),
@@ -74,33 +59,74 @@ public class AuthAppService : BaseAppService, IAuthAppService
 
     public async Task<RegisterResponseDTO> RegisterAsync(RegisterRequestDTO request)
     {
-        var validation = await _registerValidator.ValidateAsync(request);
-        if (!validation.IsValid)
-        {
-            _notificationsCollector.AddNotifications(validation);
+        if (!await IsValidRegisterDTOAsync(request) ||
+             await UserAlreadyExistsAsync(request.Email))
             return default;
-        }
 
-        var authUser = new AuthUser(request.Name, request.Email, request.Password, AuthUserRole.Guest.Id);
-        authUser.CreateRegister(request.Password);
-        var response = await _authUserRepository.CreateAsync(authUser);
+        var authUser = await _authUserRepository.CreateAsync(request.ToAuthUser());
         await _unitOfWork.CommitAsync();
-
-        var busMessage = _mapper.Map<ClientRegisteredIntegrationEvent>(response);
-        busMessage.DocumentNumber = request.DocumentNumber;
 
         try
         {
-            var messageResponse = await _bus.RequestAsync<ClientRegisteredIntegrationEvent, MessageResponse>(busMessage);
+            var messageResponse = await _bus.RequestAsync<ClientRegisteredIntegrationEvent, MessageResponse>(
+                authUser.ToClientRegisteredIntegrationEvent(request.DocumentNumber));
             if (!messageResponse.IsValid)
-                await RollbackRegisterAsync(response);
+            {
+                await RollbackRegisterAsync(authUser);
+                _notificationsCollector.AddNotifications(messageResponse.Errors?.ToList());
+                return default;
+            }
         }
-        catch (TaskCanceledException)
+        catch (TaskCanceledException e)
         {
-            await RollbackRegisterAsync(response);
+            await RollbackRegisterAsync(authUser);
+            _notificationsCollector.AddNotification(new ErrorResponse(nameof(RegisterRequestDTO), e.Message));
+            return default;
         }
 
-        return _mapper.Map<RegisterResponseDTO>(response);
+        return new RegisterResponseDTO
+        {
+            DocumentNumber = request.DocumentNumber,
+            Email = authUser.Email,
+            Id = authUser.Id,
+            Name = authUser.Name
+        };
+    }
+
+    private async Task<bool> IsValidLoginDTOAsync(LoginRequestDTO request)
+    {
+        var validation = await _loginValidator.ValidateAsync(request);
+        var isValid = validation.IsValid;
+        if (isValid) _notificationsCollector.AddNotifications(validation.Errors);
+        return isValid;
+    }
+
+    private async Task<bool> IsValidRegisterDTOAsync(RegisterRequestDTO request)
+    {
+        var validation = await _registerValidator.ValidateAsync(request);
+        var isValid = validation.IsValid;
+        if (isValid) _notificationsCollector.AddNotifications(validation.Errors);
+        return isValid;
+    }
+
+    private async Task<bool> UserAlreadyExistsAsync(string email)
+    {
+        var exists = await _authUserRepository.ExistsAsync(x => x.Email == email);
+        if (exists)
+            _notificationsCollector.AddNotification(new ErrorResponse(nameof(AuthUser), $"User with email '{email}' already exists."));
+        return exists;
+    }
+
+    private async Task<bool> IsLoginValidAsync(string email, string incomingPassword)
+    {
+        var user = await _authUserRepository.GetOneAsync(x => x.Email == email);
+        if (user is not null)
+        {
+            var valid = PasswordHasher.Verify(incomingPassword, user.PasswordHash);
+            if (valid) return true;
+        }
+        _notificationsCollector.AddNotification(new ErrorResponse(nameof(AuthUser), "User or password is invalid."));
+        return false;
     }
 
     private async Task RollbackRegisterAsync(AuthUser user)

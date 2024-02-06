@@ -1,12 +1,11 @@
 ﻿using FluentValidation.Results;
 using MSP.Core.Models;
-using MSP.WebAPI.Models;
 
 namespace MSP.WebAPI.Services;
 
 public interface INotificationCollector
 {
-    void AddNotifications(ValidationResult notifications);
+    void AddNotifications(IEnumerable<ValidationFailure> notifications);
     void AddNotifications(IEnumerable<ErrorResponse> notifications);
     void AddNotification(ErrorResponse notification);
     void AddNotification(ValidationFailure notification);

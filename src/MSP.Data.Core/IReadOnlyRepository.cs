@@ -20,7 +20,7 @@ public interface IReadOnlyRepository<TEntity> where TEntity : Entity
         string? includeProps = null,
         bool? asNoTracking = true);
 
-    Task<TEntity> GetFirstAsync(
+    Task<TEntity?> GetOneAsync(
         Expression<Func<TEntity, bool>> filter = null,
         string includeProps = null,
         bool asNoTracking = true);
@@ -29,10 +29,12 @@ public interface IReadOnlyRepository<TEntity> where TEntity : Entity
         string? includeProps = null,
         bool asNoTracking = true);
 
-    Task<TEntity> GetByIdAsync(int id, string includeProps = null);
+    Task<TEntity?> GetByIdAsync(int id, string includeProps = null);
 
     Task<bool> ExistsAsync(
         Expression<Func<TEntity, bool>> filter = null);
+
+    Task<bool> ExistsByIdAsync(int id);
 
     Task<int> CountAsync(
         Expression<Func<TEntity, bool>> filter = null);

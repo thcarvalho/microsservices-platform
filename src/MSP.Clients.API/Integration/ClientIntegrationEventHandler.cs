@@ -1,7 +1,9 @@
-﻿using MSP.Clients.API.Application.Services;
+﻿using MSP.Auth.API.DTOs;
+using MSP.Clients.API.Application.Services;
 using MSP.Core.Integration;
 using MSP.Core.Models;
 using MSP.MessageBus;
+using MSP.WebAPI.Services;
 
 namespace MSP.Clients.API.Integration;
 
@@ -27,10 +29,16 @@ public class ClientIntegrationEventHandler : BackgroundService
 
     private async Task<MessageResponse> CreateClientAsync(ClientRegisteredIntegrationEvent message)
     {
-        using (var scope = _serviceProvider.CreateScope())
+        using var scope = _serviceProvider.CreateScope();
+        var clientAppService = scope.ServiceProvider.GetRequiredService<IClientAppService>();
+        var notification = scope.ServiceProvider.GetRequiredService<INotificationCollector>();
+        var request = new ClientRequestDTO
         {
-            var clientAppService = scope.ServiceProvider.GetRequiredService<IClientAppService>();
-            return await clientAppService.CreateAsync(message);
-        }
+            Email = message.Email,
+            DocumentNumber = message.DocumentNumber,
+            Name = message.Name
+        };
+        await clientAppService.CreateAsync(request);
+        return new MessageResponse(notification.Notifications);
     }
 }

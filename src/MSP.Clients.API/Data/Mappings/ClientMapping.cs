@@ -10,6 +10,5 @@ public class ClientMapping : BaseEntityMapping<Client>
     {
         builder.Property(x => x.Name).IsRequired();
         builder.Property(x => x.DocumentNumber).HasMaxLength(11).IsRequired();
-        //builder.Property(x => x.RoleId).IsRequired();
     }
 }

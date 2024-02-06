@@ -1,4 +1,4 @@
-﻿using MSP.Auth.API.ViewModels;
+﻿using MSP.Auth.API.DTOs;
 
 namespace MSP.Auth.API.Application.Services;
 

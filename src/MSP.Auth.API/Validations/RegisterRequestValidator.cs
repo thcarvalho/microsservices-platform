@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using MSP.Auth.API.Data.Repositories;
-using MSP.Auth.API.ViewModels;
+using MSP.Auth.API.DTOs;
 
 namespace MSP.Auth.API.Validations;
 
@@ -17,9 +17,7 @@ public class RegisterRequestValidator : AbstractValidator<RegisterRequestDTO>
             .EmailAddress()
             .NotEmpty()
             .NotNull()
-            .MaximumLength(255)
-            .MustAsync((email, ct) => authUserRepository.AsQueryable().AllAsync(x => x.Email != email))
-            .WithMessage("This email already exists.");
+            .MaximumLength(255);
         RuleFor(x => x.DocumentNumber)
             .NotEmpty()
             .NotNull()

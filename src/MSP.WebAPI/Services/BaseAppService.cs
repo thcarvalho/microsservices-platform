@@ -17,16 +17,13 @@ public abstract class BaseAppService
         _notificationsCollector = notifications;
         _httpContextAccessor = httpContextAccessor;
     }
-
-    public void Notify(string propName, string message, object args)
-        => _notificationsCollector.AddNotification(new ErrorResponse(propName, message));
-
+    
     protected IEnumerable<Claim> GetUserClaims()
         => _httpContextAccessor.HttpContext!.User.Claims;
 
     protected int GetLoggedUserId() 
         => int.Parse(GetUserClaims().SingleOrDefault(x => x.Type == ClaimTypes.Sid)!.Value);
 
-    protected MessageResponse GetMessageResponse(ValidationResult validation) 
-        => new MessageResponse(validation.Errors.Select(x => new ErrorResponse(x.PropertyName, x.ErrorMessage)));
+    protected MessageResponse GetMessageResponse() 
+        => new (_notificationsCollector.Notifications);
 }
