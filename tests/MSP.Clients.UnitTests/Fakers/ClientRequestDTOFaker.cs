@@ -1,5 +1,5 @@
-﻿using MSP.Auth.API.DTOs;
-using MSP.UnitTests.Core;
+﻿using MSP.Clients.API.DTOs;
+using MSP.Tests.Shared;
 
 namespace MSP.Clients.UnitTests.Fakers;
 

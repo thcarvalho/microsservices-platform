@@ -1,17 +1,17 @@
 ﻿using FluentValidation;
 using Moq;
-using MSP.Auth.API.DTOs;
 using MSP.Clients.API.Application.Services;
 using MSP.Clients.API.Data.Repositories;
 using MSP.Clients.API.Models;
 using MSP.Clients.UnitTests.Fakers;
 using MSP.Core.Models;
 using MSP.Data.Core;
-using MSP.UnitTests.Core;
 using MSP.WebAPI.Services;
 using System.Linq.Expressions;
 using MSP.Clients.API.Data;
+using MSP.Clients.API.DTOs;
 using MSP.Clients.API.Validations;
+using MSP.Tests.Shared;
 
 namespace MSP.Clients.UnitTests.Application;
 

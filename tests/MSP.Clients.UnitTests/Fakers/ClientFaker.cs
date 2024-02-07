@@ -1,7 +1,6 @@
-﻿using Bogus;
-using MSP.Auth.API.DTOs;
+﻿using MSP.Clients.API.DTOs;
 using MSP.Clients.API.Models;
-using MSP.UnitTests.Core;
+using MSP.Tests.Shared;
 
 namespace MSP.Clients.UnitTests.Fakers;
 

@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using LinqKit;
-using MSP.Auth.API.DTOs;
 using MSP.Clients.API.Data;
 using MSP.Clients.API.Data.Repositories;
+using MSP.Clients.API.DTOs;
 using MSP.Clients.API.Mappers;
 using MSP.Clients.API.Models;
 using MSP.Clients.API.QueryParams;

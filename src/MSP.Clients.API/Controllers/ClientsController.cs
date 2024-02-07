@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MSP.Auth.API.DTOs;
 using MSP.Clients.API.Application.Services;
+using MSP.Clients.API.DTOs;
 using MSP.Clients.API.QueryParams;
 using MSP.WebAPI.Controller;
 using MSP.WebAPI.Models;

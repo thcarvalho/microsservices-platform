@@ -1,4 +1,4 @@
-﻿namespace MSP.Auth.API.DTOs;
+﻿namespace MSP.Clients.API.DTOs;
 
 public record ClientRequestDTO
 {

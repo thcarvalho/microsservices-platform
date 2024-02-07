@@ -1,6 +1,6 @@
 ﻿using Bogus;
 
-namespace MSP.UnitTests.Core;
+namespace MSP.Tests.Shared;
 
 public class ObjectFaker<T> : Faker<T> where T : class
 {

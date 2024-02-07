@@ -1,6 +1,6 @@
 ﻿using Moq.AutoMock;
 
-namespace MSP.UnitTests.Core;
+namespace MSP.Tests.Shared;
 
 
 [CollectionDefinition(nameof(MSPFixtureCollection))]

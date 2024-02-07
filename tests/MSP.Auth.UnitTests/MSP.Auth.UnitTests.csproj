@@ -10,7 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Bogus" Version="35.4.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
@@ -24,11 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\MSP.Clients.API\MSP.Clients.API.csproj" />
+    <ProjectReference Include="..\..\src\MSP.Auth.API\MSP.Auth.API.csproj" />
     <ProjectReference Include="..\MSP.Tests.Shared\MSP.Tests.Shared.csproj" />
   </ItemGroup>
 

@@ -40,7 +40,7 @@ public class AuthAppService : BaseAppService, IAuthAppService
         _tokenGeneratorService = tokenGeneratorService;
     }
 
-    public async Task<LoginResponseDTO> LoginAsync(LoginRequestDTO request)
+    public async Task<LoginResponseDTO?> LoginAsync(LoginRequestDTO request)
     {
         if (!await IsValidLoginDTOAsync(request) ||
             !await IsLoginValidAsync(request.Email, request.Password))
@@ -57,7 +57,7 @@ public class AuthAppService : BaseAppService, IAuthAppService
         return new LoginResponseDTO { Token = _tokenGeneratorService.GenerateToken(claims) };
     }
 
-    public async Task<RegisterResponseDTO> RegisterAsync(RegisterRequestDTO request)
+    public async Task<RegisterResponseDTO?> RegisterAsync(RegisterRequestDTO request)
     {
         if (!await IsValidRegisterDTOAsync(request) ||
              await UserAlreadyExistsAsync(request.Email))
@@ -97,7 +97,7 @@ public class AuthAppService : BaseAppService, IAuthAppService
     {
         var validation = await _loginValidator.ValidateAsync(request);
         var isValid = validation.IsValid;
-        if (isValid) _notificationsCollector.AddNotifications(validation.Errors);
+        if (!isValid) _notificationsCollector.AddNotifications(validation.Errors);
         return isValid;
     }
 
@@ -105,7 +105,7 @@ public class AuthAppService : BaseAppService, IAuthAppService
     {
         var validation = await _registerValidator.ValidateAsync(request);
         var isValid = validation.IsValid;
-        if (isValid) _notificationsCollector.AddNotifications(validation.Errors);
+        if (!isValid) _notificationsCollector.AddNotifications(validation.Errors);
         return isValid;
     }
 

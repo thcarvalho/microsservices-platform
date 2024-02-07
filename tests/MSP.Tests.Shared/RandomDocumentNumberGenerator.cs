@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace MSP.UnitTests.Core;
+namespace MSP.Tests.Shared;
 
 public class RandomDocumentNumberGenerator
 {

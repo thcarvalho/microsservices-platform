@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using MSP.Auth.API;
 using MSP.Clients.API.Data;
 using MSP.Clients.API.Integration;
 using MSP.Clients.API.Validations;

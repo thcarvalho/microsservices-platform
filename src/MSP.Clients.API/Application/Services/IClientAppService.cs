@@ -1,4 +1,4 @@
-﻿using MSP.Auth.API.DTOs;
+﻿using MSP.Clients.API.DTOs;
 using MSP.Clients.API.QueryParams;
 using MSP.WebAPI.Models;
 

@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using MSP.Auth.API.DTOs;
+using MSP.Clients.API.DTOs;
 
 namespace MSP.Clients.API.Validations;
 

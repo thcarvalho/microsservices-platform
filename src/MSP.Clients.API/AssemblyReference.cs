@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace MSP.Auth.API;
+namespace MSP.Clients.API;
 
 public static class AssemblyReference
 {

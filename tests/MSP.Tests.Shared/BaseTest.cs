@@ -3,7 +3,7 @@ using Moq;
 using Moq.AutoMock;
 using MSP.Core.Utils;
 
-namespace MSP.UnitTests.Core;
+namespace MSP.Tests.Shared;
 
 
 public class BaseTest : IClassFixture<MSPFixture>

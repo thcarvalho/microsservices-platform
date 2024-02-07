@@ -1,5 +1,5 @@
-﻿using MSP.Auth.API.DTOs;
-using MSP.Clients.API.Application.Services;
+﻿using MSP.Clients.API.Application.Services;
+using MSP.Clients.API.DTOs;
 using MSP.Core.Integration;
 using MSP.Core.Models;
 using MSP.MessageBus;
