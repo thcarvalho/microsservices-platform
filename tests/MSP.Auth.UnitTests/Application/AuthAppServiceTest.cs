@@ -8,7 +8,9 @@ using MSP.Auth.API.DTOs;
 using MSP.Auth.API.Models;
 using MSP.Auth.API.Validations;
 using MSP.Auth.UnitTests.Fakers;
+using MSP.Core.Integration;
 using MSP.Core.Models;
+using MSP.MessageBus;
 using MSP.Tests.Shared;
 using MSP.WebAPI.Services;
 
@@ -140,19 +142,25 @@ public class AuthAppServiceTest : BaseTest
             .Setup(x => x.ValidateAsync(request, It.IsAny<CancellationToken>()))
             .ReturnsAsync(validation);
         GetMock<IAuthUserRepository>()
-            .Setup(x => x.GetOneAsync(It.IsAny<Expression<Func<AuthUser, bool>>>(),
-                It.IsAny<string>(),
-                It.IsAny<bool>()))
-            .ReturnsAsync(entity);
-
-        var login = await _authAppService.RegisterAsync(request);
-
-        Assert.NotNull(login);
+            .Setup(x => x.ExistsAsync(It.IsAny<Expression<Func<AuthUser, bool>>>()))
+            .ReturnsAsync(false);
         GetMock<IAuthUserRepository>()
-            .Verify(x => x.GetOneAsync(It.IsAny<Expression<Func<AuthUser, bool>>>(),
-                It.IsAny<string>(),
-                It.IsAny<bool>()), Times.Exactly(2));
-        GetMock<ITokenGeneratorService>().Verify(x => x.GenerateToken(It.IsAny<IEnumerable<Claim>>()), Times.Once);
+            .Setup(x => x.CreateAsync(It.IsAny<AuthUser>()))
+            .ReturnsAsync(entity);
+        GetMock<IMessageBus>()
+            .Setup(x => x.RequestAsync<ClientRegisteredIntegrationEvent, MessageResponse>(It.IsAny<ClientRegisteredIntegrationEvent>()))
+            .ReturnsAsync(new MessageResponse());
+
+        var register = await _authAppService.RegisterAsync(request);
+
+        Assert.NotNull(register);
+        Assert.Empty(validation.Errors);
+        GetMock<IAuthUserRepository>().Verify(x => 
+            x.ExistsAsync(It.IsAny<Expression<Func<AuthUser, bool>>>()), Times.Once);
+        GetMock<IAuthUserRepository>().Verify(x =>
+            x.CreateAsync(It.IsAny<AuthUser>()), Times.Once);
+        GetMock<IMessageBus>().Verify(x => 
+            x.RequestAsync<ClientRegisteredIntegrationEvent, MessageResponse>(It.IsAny<ClientRegisteredIntegrationEvent>()), Times.Once);
         GetMock<INotificationCollector>().Verify(x => x.AddNotification(It.IsAny<ErrorResponse>()), Times.Never);
         GetMock<INotificationCollector>().Verify(x => x.AddNotifications(validation.Errors), Times.Never);
     }

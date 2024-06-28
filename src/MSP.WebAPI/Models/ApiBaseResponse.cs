@@ -1,4 +1,5 @@
-﻿using MSP.Core.Models;
+﻿using MediatR;
+using MSP.Core.Models;
 
 namespace MSP.WebAPI.Models;
 

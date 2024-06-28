@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+  sqlserverdb:
+    image: mcr.microsoft.com/mssql/server
+
+  rabbitmq:
+    image: rabbitmq:3-management
+
+  msp.auth.api:
+    image: ${DOCKER_REGISTRY-}mspauthapi
+    build:
+      context: .
+      dockerfile: src/MSP.Auth.API/Dockerfile
+
+  msp.clients.api:
+    image: ${DOCKER_REGISTRY-}mspclientsapi
+    build:
+      context: .
+      dockerfile: src/MSP.Clients.API/Dockerfile
+
+volumes:
+  sqlserver_data:

@@ -1,5 +1,4 @@
-﻿using FluentValidation.Results;
-using MediatR;
+﻿using MediatR;
 using MSP.Core.CQRS;
 
 namespace MSP.Core.Mediator;
@@ -13,7 +12,7 @@ public class MediatorHandler : IMediatorHandler
         _mediator = mediator;
     }
 
-    public async Task<ValidationResult> SendCommand<T>(T command) where T : Command
+    public async Task<CommandResult> SendCommand<T>(T command) where T : Command
     {
         return await _mediator.Send(command);
     }

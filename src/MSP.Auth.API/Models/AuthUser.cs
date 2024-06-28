@@ -15,10 +15,12 @@ public class AuthUser : Entity
 
     public AuthUser(
         string name, 
-        string email)
+        string email, 
+        string passwordHash)
     {
         Name = name;
         Email = email;
+        CreateGuestRegister(passwordHash);
     }
 
     public void CreateGuestRegister(string password)

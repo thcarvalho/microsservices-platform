@@ -8,7 +8,7 @@ public static class AuthMapper
 {
     public static AuthUser ToAuthUser(this RegisterRequestDTO dto)
     {
-        return new AuthUser(dto.Name, dto.Email);
+        return new AuthUser(dto.Name, dto.Email, dto.Password);
     }
 
     public static ClientRegisteredIntegrationEvent ToClientRegisteredIntegrationEvent(this AuthUser entity, string documentNumber)

@@ -1,0 +1,55 @@
+version: '3.4'
+
+services:
+  sqlserverdb:
+     container_name: sqlserverdb
+     restart: always
+     ports:
+       - "1433:1433"
+     volumes:
+       - sqlserver_data:/data/db
+     environment:
+       MSSQL_SA_PASSWORD: "MeuDB@123"
+       ACCEPT_EULA: "Y"
+
+  rabbitmq:
+     container_name: localrabbit
+     environment:
+        RABBITMQ_DEFAULT_USER: "msplatform"
+        RABBITMQ_DEFAULT_PASS: "msplatform"
+     ports:
+        - "5672:5672"
+        - "15672:15672"
+
+  msp.auth.api:
+    container_name: msp.auth.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      #- ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "8001:80"
+      #- "8101:443"
+    depends_on:
+      - rabbitmq
+      - msp.clients.api
+      - sqlserverdb
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  msp.clients.api:
+    container_name: msp.clients.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+      #- ASPNETCORE_URLS=https://+:443;http://+:80
+    ports:
+      - "8002:80"
+      #- "8102:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      - rabbitmq
+      - sqlserverdb

@@ -18,13 +18,21 @@ public class ClientIntegrationEventHandler : BackgroundService
         _serviceProvider = serviceProvider;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    private void SetResponder()
     {
-        await _bus.RespondAsync<ClientRegisteredIntegrationEvent, MessageResponse>(CreateClientAsync);
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            await Task.Delay(TimeSpan.FromSeconds(15), stoppingToken);
-        }
+        _bus.RespondAsync<ClientRegisteredIntegrationEvent, MessageResponse>(async req => await CreateClientAsync(req));
+        _bus.AdvancedBus.Connected += OnConnect;
+    }
+
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        SetResponder();
+        return Task.CompletedTask;
+    }
+    
+    private void OnConnect(object s, EventArgs e)
+    {
+        SetResponder();
     }
 
     private async Task<MessageResponse> CreateClientAsync(ClientRegisteredIntegrationEvent message)
@@ -32,13 +40,13 @@ public class ClientIntegrationEventHandler : BackgroundService
         using var scope = _serviceProvider.CreateScope();
         var clientAppService = scope.ServiceProvider.GetRequiredService<IClientAppService>();
         var notification = scope.ServiceProvider.GetRequiredService<INotificationCollector>();
-        var request = new ClientRequestDTO
+
+        await clientAppService.CreateAsync(new ClientRequestDTO
         {
             Email = message.Email,
             DocumentNumber = message.DocumentNumber,
             Name = message.Name
-        };
-        await clientAppService.CreateAsync(request);
+        });
         return new MessageResponse(notification.Notifications);
     }
 }

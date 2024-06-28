@@ -3,10 +3,10 @@ using MediatR;
 
 namespace MSP.Core.CQRS;
 
-public class Command : Message, IRequest<ValidationResult>
+public class Command : Message, IRequest<CommandResult>
 {
     public DateTime Timestamp { get; private set; }
-    public ValidationResult ValidationResult { get; set; }
+    public CommandResult CommandResult { get; set; }
 
     protected Command()
     {

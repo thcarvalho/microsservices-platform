@@ -1,11 +1,15 @@
 ﻿using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using MSP.Clients.API.Application.Events;
 using MSP.Clients.API.Data;
 using MSP.Clients.API.Integration;
 using MSP.Clients.API.Validations;
+using MSP.Core.CQRS;
 using MSP.Core.Extensions;
+using MSP.Core.Mediator;
 using MSP.MessageBus;
 using Scrutor;
 
@@ -35,20 +39,19 @@ public static class DependencyInjection
 
     public static WebApplication ConfigureApplication(this WebApplication app)
     {
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger()
-                .UseStaticFiles()
-                .UseCors()
-                .UseRouting()
-                .UseAuthentication()
-                .UseAuthorization();
-            app.UseSwaggerUI();
-        }
+            app.UseDeveloperExceptionPage();
 
         app.UseHttpsRedirection();
 
+        app.UseRouting()
+            .UseSwagger()
+            .UseStaticFiles()
+            .UseCors()
+            .UseAuthentication()
+            .UseAuthorization();
+
+        app.UseSwaggerUI();
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
@@ -63,6 +66,10 @@ public static class DependencyInjection
     {
         services.ConfigureSettings(configuration);
 
+        services.AddScoped<IMediatorHandler, MediatorHandler>();
+
+        services.AddScoped<INotificationHandler<ClientRegisteredEvent>, ClientEventHandler>();
+
         services.AddControllers();
 
         services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ClientRequestValidator>());
@@ -72,6 +79,8 @@ public static class DependencyInjection
         services.AddEndpointsApiExplorer();
 
         services.AddHttpContextAccessor();
+
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly));
 
         services.AddCors(options =>
         {

@@ -17,24 +17,5 @@ public class BaseApiController : ControllerBase
     }
 
     protected IEnumerable<ErrorResponse> Notifications => _notificationCollector.Notifications.ToList();
-
-    protected ApiBaseResponse<T> BaseResponse<T>(T? data)
-    {
-        var response = _notificationCollector.HasNotifications
-            ? new ApiBaseResponse<T>(data, Notifications.ToList())
-            : new ApiBaseResponse<T>(data);
-
-        HttpContext.Response.StatusCode = GetStatusCode();
-
-        return response;
-    }
-
-    private int GetStatusCode()
-    {
-        if (!_notificationCollector.HasNotifications) 
-            return (int)HttpStatusCode.OK;
-
-        var notification = _notificationCollector.Notifications.FirstOrDefault();
-        return (int)notification.Type;
-    }
+    protected ApiBaseResponse<T> BaseResponse<T>(T? data) => ApiResponseFactory.CreateBaseResponse(data, _notificationCollector, HttpContext);
 }

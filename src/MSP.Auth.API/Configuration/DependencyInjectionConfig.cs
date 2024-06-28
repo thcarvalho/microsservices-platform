@@ -35,20 +35,19 @@ public static class DependencyInjection
 
     public static WebApplication ConfigureApplication(this WebApplication app)
     {
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger()
-                .UseStaticFiles()
-                .UseCors()
-                .UseRouting()
-                .UseAuthentication()
-                .UseAuthorization();
-            app.UseSwaggerUI();
-        }
-        
+            app.UseDeveloperExceptionPage();
+
         app.UseHttpsRedirection();
 
+        app.UseRouting()
+           .UseSwagger()
+           .UseStaticFiles()
+           .UseCors()
+           .UseAuthentication()
+           .UseAuthorization();
+
+        app.UseSwaggerUI();
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();

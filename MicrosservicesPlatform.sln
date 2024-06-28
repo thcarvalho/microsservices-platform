@@ -85,13 +85,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSP.Data.Core", "src\MSP.Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSP.Clients.UnitTests", "tests\MSP.Clients.UnitTests\MSP.Clients.UnitTests.csproj", "{406B3786-597B-4810-A211-167441D93B70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSP.Clients.IntegrationTests", "tests\MSP.Clients.IntegrationTests\MSP.Clients.IntegrationTests.csproj", "{B9569209-3D06-4797-966C-263DCA396280}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSP.Clients.IntegrationTests", "tests\MSP.Clients.IntegrationTests\MSP.Clients.IntegrationTests.csproj", "{B9569209-3D06-4797-966C-263DCA396280}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{5BFAB4BE-AFDD-4A9B-AB6A-633194D56B12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSP.Auth.UnitTests", "tests\MSP.Auth.UnitTests\MSP.Auth.UnitTests.csproj", "{266CF771-2A0C-407D-B751-53E315ADE511}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSP.Auth.UnitTests", "tests\MSP.Auth.UnitTests\MSP.Auth.UnitTests.csproj", "{266CF771-2A0C-407D-B751-53E315ADE511}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSP.Tests.Shared", "tests\MSP.Tests.Shared\MSP.Tests.Shared.csproj", "{D6BD5A03-63F8-4CD1-83BB-336610160DCA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSP.Tests.Shared", "tests\MSP.Tests.Shared\MSP.Tests.Shared.csproj", "{D6BD5A03-63F8-4CD1-83BB-336610160DCA}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{FFC8E5D7-C090-4DFD-AE13-18485301C732}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSP.Courses.Domain", "src\MSP.Courses.Domain\MSP.Courses.Domain.csproj", "{0A6E5299-1981-4C63-A86B-54B1C710F832}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSP.Courses.Infra", "src\MSP.Courses.Infra\MSP.Courses.Infra.csproj", "{1ACF6752-9736-4553-BB10-6C56D3767B02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -183,6 +189,18 @@ Global
 		{D6BD5A03-63F8-4CD1-83BB-336610160DCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6BD5A03-63F8-4CD1-83BB-336610160DCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6BD5A03-63F8-4CD1-83BB-336610160DCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFC8E5D7-C090-4DFD-AE13-18485301C732}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFC8E5D7-C090-4DFD-AE13-18485301C732}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFC8E5D7-C090-4DFD-AE13-18485301C732}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFC8E5D7-C090-4DFD-AE13-18485301C732}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A6E5299-1981-4C63-A86B-54B1C710F832}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A6E5299-1981-4C63-A86B-54B1C710F832}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A6E5299-1981-4C63-A86B-54B1C710F832}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A6E5299-1981-4C63-A86B-54B1C710F832}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1ACF6752-9736-4553-BB10-6C56D3767B02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1ACF6752-9736-4553-BB10-6C56D3767B02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1ACF6752-9736-4553-BB10-6C56D3767B02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1ACF6752-9736-4553-BB10-6C56D3767B02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -227,6 +245,8 @@ Global
 		{5BFAB4BE-AFDD-4A9B-AB6A-633194D56B12} = {F17F568E-529F-4F08-8D21-D539D5E3F324}
 		{266CF771-2A0C-407D-B751-53E315ADE511} = {A9476163-51C4-45B6-BAE7-40EC6EAE3F95}
 		{D6BD5A03-63F8-4CD1-83BB-336610160DCA} = {5BFAB4BE-AFDD-4A9B-AB6A-633194D56B12}
+		{0A6E5299-1981-4C63-A86B-54B1C710F832} = {2A176FC0-1220-40F7-B641-BEC8A3FC36C0}
+		{1ACF6752-9736-4553-BB10-6C56D3767B02} = {2A176FC0-1220-40F7-B641-BEC8A3FC36C0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9A76490B-338E-41AD-8A33-B63558D87199}
